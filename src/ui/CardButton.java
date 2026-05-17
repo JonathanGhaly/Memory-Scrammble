@@ -1,13 +1,12 @@
 package ui;
 
-import java.awt.Dimension;
-import java.awt.Font;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class CardButton extends JButton {
 
     private final int iconId;
+    private boolean matched = false;
 
     public CardButton(int iconId) {
         this.iconId = iconId;
@@ -37,4 +36,23 @@ public class CardButton extends JButton {
     public void hideCard() {
         setText("?");
     }
+
+    public boolean isMatched(){
+
+        return matched;
+    }
+
+    public void setMatched(
+            boolean matched){
+
+        this.matched=matched;
+
+        if(matched){
+
+            setBackground(
+                    Color.GREEN
+            );
+        }
+    }
+
 }
