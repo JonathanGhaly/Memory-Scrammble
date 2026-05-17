@@ -8,6 +8,8 @@ public class CardButton extends JButton {
 
     public CardButton(int iconId) {
         this.iconId = iconId;
+
+        hideCard();
     }
 
     public int getIconId() {
@@ -16,5 +18,9 @@ public class CardButton extends JButton {
 
     public void reveal() {
         setText(String.valueOf(iconId));
+    }
+
+    public void hideCard() {
+        setText("?");
     }
 }
