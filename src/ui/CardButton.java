@@ -1,5 +1,8 @@
 package ui;
 
+import java.awt.Dimension;
+import java.awt.Font;
+
 import javax.swing.*;
 
 public class CardButton extends JButton {
@@ -8,6 +11,17 @@ public class CardButton extends JButton {
 
     public CardButton(int iconId) {
         this.iconId = iconId;
+
+        setPreferredSize(
+                new Dimension(
+                        80,
+                        100));
+
+        setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        30));
 
         hideCard();
     }
