@@ -13,4 +13,8 @@ public class CardButton extends JButton {
     public int getIconId() {
         return iconId;
     }
+
+    public void reveal() {
+        setText(String.valueOf(iconId));
+    }
 }
