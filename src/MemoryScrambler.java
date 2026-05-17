@@ -1,3 +1,5 @@
+import ui.MemoryScramble;
+
 import javax.swing.*;
 
 public class MemoryScrambler {

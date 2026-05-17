@@ -12,52 +12,44 @@ public class GameManager {
     private CardButton firstSelected;
     private CardButton secondSelected;
 
+    private boolean checking = false;
+
     public JPanel createBoard(
             int rows,
-            int columns,
-            MemoryScramble game){
+            int columns) {
 
-        JPanel panel=
-                new JPanel(
-                        new GridLayout(
-                                rows,
-                                columns));
+        JPanel panel = new JPanel(
+                new GridLayout(
+                        rows,
+                        columns,
+                        5,
+                        5
+                ));
 
-        int totalCells=
-                rows*columns;
+        int totalCells = rows * columns;
+        int pairs = totalCells / 2;
 
-        int pairs=
-                totalCells/2;
-
-        ArrayList<Integer>
-                icons=
+        ArrayList<Integer> icons =
                 new ArrayList<>();
 
-        for(
-                int i=1;
-                i<=pairs;
-                i++){
+        for (int i = 1; i <= pairs; i++) {
 
             icons.add(i);
             icons.add(i);
         }
 
-        Collections.shuffle(
-                icons
-        );
+        Collections.shuffle(icons);
 
-        for(
-                int icon:
-                icons){
+        for (int icon : icons) {
 
-            CardButton button=
-                    new CardButton(
-                            icon);
+            CardButton button =
+                    new CardButton(icon);
 
             button.addActionListener(
-                    e->handleClick(
-                            (CardButton)e.getSource(),
-                            game));
+                    e -> handleClick(
+                            (CardButton) e.getSource()
+                    )
+            );
 
             panel.add(button);
         }
@@ -66,51 +58,70 @@ public class GameManager {
     }
 
     private void handleClick(
-            CardButton clicked,
-            MemoryScramble game){
+            CardButton clicked) {
 
-        if(clicked.isMatched())
+        if (checking)
+            return;
+
+        if (clicked.isMatched())
+            return;
+
+        if (clicked == firstSelected)
             return;
 
         clicked.reveal();
 
-        if(firstSelected==null){
+        if (firstSelected == null) {
 
-            firstSelected=
-                    clicked;
-
+            firstSelected = clicked;
         }
+        else {
 
-        else{
-
-            secondSelected=
-                    clicked;
+            secondSelected = clicked;
 
             checkMatch();
         }
-
     }
 
-    private void checkMatch(){
+    private void checkMatch() {
 
-        if(firstSelected
-                .getIconId()
+        if (firstSelected.getIconId()
                 ==
-                secondSelected
-                        .getIconId()){
+                secondSelected.getIconId()) {
 
-            firstSelected
-                    .setMatched(
-                            true);
+            firstSelected.setMatched(
+                    true);
 
-            secondSelected
-                    .setMatched(
-                            true);
+            secondSelected.setMatched(
+                    true);
 
-            firstSelected=null;
-            secondSelected=null;
+            firstSelected = null;
+            secondSelected = null;
         }
 
-    }
+        else {
 
+            checking = true;
+
+            Timer timer =
+                    new Timer(
+                            800,
+                            e -> {
+
+                                firstSelected.hideCard();
+
+                                secondSelected.hideCard();
+
+                                firstSelected = null;
+                                secondSelected = null;
+
+                                checking = false;
+                            }
+                    );
+
+            timer.setRepeats(false);
+
+            timer.start();
+        }
+    }
 }
