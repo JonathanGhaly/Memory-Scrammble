@@ -6,7 +6,12 @@ import java.util.Collections;
 
   public class GameManager {
 
-      public JPanel createBoard(
+
+    private CardButton firstSelected;
+    private CardButton secondSelected;
+
+
+    public JPanel createBoard(
               int rows,
               int columns,
               MemoryScramble game){
@@ -40,18 +45,48 @@ import java.util.Collections;
                     icons
             );
 
-          for(
-                  int icon:
-                  icons){
+        for(
+                int icon:
+                icons){
 
-              CardButton button=
-                      new CardButton(
-                              icon);
+            CardButton button=
+                    new CardButton(
+                            icon);
 
-              panel.add(button);
-          }
+            button.addActionListener(
+                    e->handleClick(
+                            (CardButton)e.getSource(),
+                            game));
+
+            panel.add(button);
+        }
 
           return panel;
+      }
+
+    
+    private void handleClick(
+              CardButton clicked,
+              MemoryScramble game){
+
+          if(clicked.isMatched())
+              return;
+
+          clicked.reveal();
+
+          if(firstSelected==null){
+
+              firstSelected=
+                      clicked;
+
+          }
+
+          else{
+
+              secondSelected=
+                      clicked;
+          }
+
       }
 
   }
