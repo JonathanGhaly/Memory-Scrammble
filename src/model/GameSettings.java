@@ -1,9 +1,9 @@
 package model;
 
 public class GameSettings {
-    private int rows;
-    private int columns;
-    private int timeLimit;
+    private final int rows;
+    private final int columns;
+    private final int timeLimit;
 
     public GameSettings(int rows,int columns,int timeLimit){
         this.rows=rows;
