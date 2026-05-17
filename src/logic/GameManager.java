@@ -36,6 +36,10 @@ import java.util.Collections;
               icons.add(i);
           }
 
+            Collections.shuffle(
+                    icons
+            );
+
           for(
                   int icon:
                   icons){
