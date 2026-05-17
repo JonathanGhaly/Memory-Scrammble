@@ -1,6 +1,7 @@
 package logic;
 
 import ui.CardButton;
+import ui.MemoryScramble;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,110 +13,149 @@ public class GameManager {
     private CardButton firstSelected;
     private CardButton secondSelected;
 
-    private boolean checking = false;
+    private boolean checking=false;
+
+    private int matchesFound=0;
+
+    private final MemoryScramble game;
+
+    public GameManager(
+            MemoryScramble game){
+
+        this.game=game;
+    }
 
     public JPanel createBoard(
             int rows,
-            int columns) {
+            int columns){
 
-        JPanel panel = new JPanel(
-                new GridLayout(
-                        rows,
-                        columns,
-                        5,
-                        5
-                ));
+        JPanel panel=
+                new JPanel(
+                        new GridLayout(
+                                rows,
+                                columns,
+                                5,
+                                5
+                        )
+                );
 
-        int totalCells = rows * columns;
-        int pairs = totalCells / 2;
+        int totalCells=
+                rows*columns;
 
-        ArrayList<Integer> icons =
+        int pairs=
+                totalCells/2;
+
+        ArrayList<Integer> icons=
                 new ArrayList<>();
 
-        for (int i = 1; i <= pairs; i++) {
+        for(int i=1;i<=pairs;i++){
 
             icons.add(i);
             icons.add(i);
         }
 
-        Collections.shuffle(icons);
+        Collections.shuffle(
+                icons
+        );
 
-        for (int icon : icons) {
+        for(int icon:icons){
 
-            CardButton button =
-                    new CardButton(icon);
+            CardButton button=
+                    new CardButton(
+                            icon
+                    );
 
             button.addActionListener(
-                    e -> handleClick(
-                            (CardButton) e.getSource()
+                    e->handleClick(
+                            (CardButton)e.getSource(),
+                            pairs
                     )
             );
 
-            panel.add(button);
+            panel.add(
+                    button
+            );
         }
 
         return panel;
     }
 
     private void handleClick(
-            CardButton clicked) {
+            CardButton clicked,
+            int totalPairs){
 
-        if (checking)
+        if(checking)
             return;
 
-        if (clicked.isMatched())
+        if(clicked.isMatched())
             return;
 
-        if (clicked == firstSelected)
+        if(clicked==firstSelected)
             return;
 
         clicked.reveal();
 
-        if (firstSelected == null) {
+        if(firstSelected==null){
 
-            firstSelected = clicked;
+            firstSelected=clicked;
         }
-        else {
 
-            secondSelected = clicked;
+        else{
 
-            checkMatch();
+            secondSelected=clicked;
+
+            checkMatch(
+                    totalPairs
+            );
         }
     }
 
-    private void checkMatch() {
+    private void checkMatch(
+            int totalPairs){
 
-        if (firstSelected.getIconId()
+        if(firstSelected.getIconId()
                 ==
-                secondSelected.getIconId()) {
+                secondSelected.getIconId()){
 
             firstSelected.setMatched(
-                    true);
+                    true
+            );
 
             secondSelected.setMatched(
-                    true);
+                    true
+            );
 
-            firstSelected = null;
-            secondSelected = null;
+            matchesFound++;
+
+            if(matchesFound
+                    ==
+                    totalPairs){
+
+                game.playerWon();
+            }
+
+            firstSelected=null;
+            secondSelected=null;
         }
 
-        else {
+        else{
 
-            checking = true;
+            checking=true;
 
-            Timer timer =
+            Timer timer=
                     new Timer(
                             800,
-                            e -> {
+                            e->{
 
                                 firstSelected.hideCard();
 
                                 secondSelected.hideCard();
 
-                                firstSelected = null;
-                                secondSelected = null;
+                                firstSelected=null;
 
-                                checking = false;
+                                secondSelected=null;
+
+                                checking=false;
                             }
                     );
 

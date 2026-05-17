@@ -9,16 +9,41 @@ import java.awt.*;
 
 public class MemoryScramble extends JFrame {
 
+    private final JLabel timerLabel;
+    private Timer timer;
+
+    private int remainingTime;
+
     public MemoryScramble() {
 
         GameSettings settings = setupGameConfig();
 
-        GameManager gameManager = new GameManager();
+        remainingTime = settings.timeLimit();
+
+        GameManager gameManager = new GameManager(this);
 
         setTitle("Memory Scramble");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setLayout(new BorderLayout());
+
+        timerLabel = new JLabel(
+                "Time: " + remainingTime + "s",
+                SwingConstants.CENTER
+        );
+
+        timerLabel.setFont(
+                new Font(
+                        "Arial",
+                        Font.BOLD,
+                        20
+                )
+        );
+
+        add(
+                timerLabel,
+                BorderLayout.NORTH
+        );
 
         add(
                 gameManager.createBoard(
@@ -28,11 +53,56 @@ public class MemoryScramble extends JFrame {
                 BorderLayout.CENTER
         );
 
+        startTimer();
+
         pack();
 
         setLocationRelativeTo(null);
 
         setVisible(true);
+    }
+
+    private void startTimer() {
+
+        timer = new Timer(
+                1000,
+                e -> {
+
+                    remainingTime--;
+
+                    timerLabel.setText(
+                            "Time: "
+                                    + remainingTime
+                                    + "s"
+                    );
+
+                    if (remainingTime <= 0) {
+
+                        timer.stop();
+
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Game Over! Time is up."
+                        );
+
+                        System.exit(0);
+                    }
+
+                });
+
+        timer.start();
+    }
+
+    public void playerWon() {
+
+        timer.stop();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Congratulations! You matched all cards!"
+        );
+
+        System.exit(0);
     }
 
     private GameSettings setupGameConfig() {
@@ -41,18 +111,18 @@ public class MemoryScramble extends JFrame {
 
             int rows = Integer.parseInt(
                     JOptionPane.showInputDialog(
-                            "Enter rows:")
-            );
+                            "Enter rows:"
+                    ));
 
             int columns = Integer.parseInt(
                     JOptionPane.showInputDialog(
-                            "Enter columns:")
-            );
+                            "Enter columns:"
+                    ));
 
             int time = Integer.parseInt(
                     JOptionPane.showInputDialog(
-                            "Enter timeout:")
-            );
+                            "Enter timeout:"
+                    ));
 
             if (!ValidationUtil.isBoardValid(
                     rows,
@@ -72,7 +142,6 @@ public class MemoryScramble extends JFrame {
                     time
             );
         }
-
         catch (Exception e) {
 
             JOptionPane.showMessageDialog(
