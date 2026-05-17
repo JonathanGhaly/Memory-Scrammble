@@ -6,10 +6,11 @@ import java.awt.*;
 public class CardButton extends JButton {
 
     private final int iconId;
-    private boolean matched = false;
+    private boolean matched=false;
 
-    public CardButton(int iconId) {
-        this.iconId = iconId;
+    public CardButton(int iconId){
+
+        this.iconId=iconId;
 
         setPreferredSize(
                 new Dimension(
@@ -25,16 +26,21 @@ public class CardButton extends JButton {
         hideCard();
     }
 
-    public int getIconId() {
-        return iconId;
+    public void reveal(){
+
+        setText(
+                String.valueOf(iconId)
+        );
     }
 
-    public void reveal() {
-        setText(String.valueOf(iconId));
-    }
+    public void hideCard(){
 
-    public void hideCard() {
         setText("?");
+    }
+
+    public int getIconId(){
+
+        return iconId;
     }
 
     public boolean isMatched(){
